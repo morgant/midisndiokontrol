@@ -5,7 +5,7 @@ by Morgan Aldridge <morgant@makkintosshu.com>
 
 A WIP (work in progress) utility that lets you control [sndio](https://sndio.org/) devices & state, plus X11 media applications, under [OpenBSD](https://www.openbsd.org/) using a MIDI control surface. It's currently being developed & tested with a Korg nanoKONTROL2 (hence 'kontrol' in the name), but I plan to make it much more generic and configurable. It is currently just a wrapper around OpenBSD's [midicat(1)](http://man.openbsd.org/midicat), [sndioctl(1)](http://man.openbsd.org/sndioctl), [xdotool(1)](https://github.com/jordansissel/xdotool), but I expect to rewrite it in C once I have stabilized the concept more, for performance reasons.
 
-*IMPORTANT:* _I am not a regular user of MIDI devices, nor have I delved into the spec yet, so I'm likely using incorrect terminology at this point. Please feel free to suggest corrections/improvements."
+*IMPORTANT:* _I am not a regular user of MIDI devices, nor have I delved into the spec yet, so I'm likely using incorrect terminology at this point. Please feel free to suggest corrections/improvements."_
 
 ## FEATURES
 
@@ -21,7 +21,7 @@ The script is currently relatively straightforward to modify for your specific M
 1. Run `midicat -d -q midi/<device_num>`
 2. Press a key on your MIDI input device
 3. Look at the 2nd column of hex output in the output of Step 1 to determine the key hex code
-4. Edit the appropriate `key_*` variable content and set it to the hex code you identified
+4. Edit the appropriate `key_\*` variable content and set it to the hex code you identified
 5. Update the `"$key_")` handler in the `case` statement for the appropriate key to perform the action you'd like
 6. Go to Step 2 and repeat until you've updated as you see fit
 
