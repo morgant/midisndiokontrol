@@ -1,0 +1,138 @@
+#!/bin/sh
+
+verbose=true
+midi_device="midithru/0" # when using default, make sure to `midicat -q midi/<device_number> -q midithru/0`
+key_play="29" # Korg nanoKONTROL2 "Play" button
+key_pause=""
+key_stop="2a" # Korg nanoKONTROL2 "Stop" button
+key_record="2d" # Korg nanoKONTROL2 "Record" button
+key_forward="2c" # Korg nanoKONTROL2 "Fast Forward" button
+key_rewind="2b" # Korg nanoKONTROL2 "Rewind" button
+key_previous="3a" # Korg nanoKONTROL2 "Previous Track" button
+key_next="3b" # Korg nanoKONTROL2 "Next Track" button
+key_volume_up=""
+key_volume_down=""
+key_mute_0="30" # Korg nanoKONTROL2 "Mute" button 1
+key_level_0="00" # Korg nanoKONTROL2 level slider 0
+key_level_1="01" # Korg nanoKONTROL2 level slider 1
+key_level_2="02" # Korg nanoKONTROL2 level slider 2
+key_level_3="03" # Korg nanoKONTROL2 level slider 3
+key_level_4="04" # Korg nanoKONTROL2 level slider 4
+key_level_5="05" # Korg nanoKONTROL2 level slider 5
+key_level_6="06" # Korg nanoKONTROL2 level slider 6
+key_level_7="07" # Korg nanoKONTROL2 level slider 7
+
+_is_valid_midi_key_value() {
+  [ "${#1}" -eq 2 ]
+}
+
+_is_midi_key_down() {
+  [ "$1" = "7f" ]
+}
+
+_is_midi_key_up() {
+  [ "$1" = "00" ]
+}
+
+_hex_to_dec() {
+  printf "%d\n" "0x${1}"
+}
+
+_midi_key_value_to_level_float() {
+  bc -le "$(_hex_to_dec "$1") / 127" -e quit
+}
+
+_midi_key_value_to_boolean() {
+  if _is_midi_key_down "$1" ; then
+    printf "1\n"
+  elif _is_midi_key_up "$1" ; then
+    printf "0\n"
+  else
+    printf "ERROR! MIDI key value '%s' cannot be determined to be true (on/down/pressed) or false (off/up/released)!\n" "$1" 1>&2
+  fi
+}
+
+_media_key() {
+  xdotool key "XF86Audio${1}"
+}
+
+_media_key_down() {
+  xdotool keydown "XF86Audio${1}"
+}
+
+_media_key_up() {
+  xdotool keyup "XF86Audio${1}"
+}
+
+_sndio_set_level() {
+  sndioctl "${1}.level=$(_midi_key_value_to_level_float "${2}")"
+}
+
+_is_sndio_muted() {
+  [ "$(sndioctl -n "${1}.mute")" -eq "1" ]
+}
+
+_sndio_set_muted() {
+  sndioctl "${1}.mute=$(_midi_key_value_to_boolean "${2}")"
+}
+
+_sndio_toggle_mute() {
+  _is_sndio_muted "$1" && _sndio_set_muted "$1" "00" || _sndio_set_muted "$1" "7f"
+}
+
+# NOTE: `midicat -d` only outputs hex to STDERR, so we're redirecting STDERR to STDOUT
+midicat -d -q "$midi_device" -o /dev/null 2>&1 | while IFS=' ' read -r _midi_command _midi_key _midi_key_value ; do
+  #echo "command: ${_midi_command} key: ${_midi_key} value: ${_midi_key_value}"
+  if [ "$_midi_command" = "b0" ] ; then
+    case $_midi_key in
+      "$key_play")
+        _is_midi_key_up "$_midi_key_value" && _media_key Play
+        ;; 
+      "$key_pause")
+        _is_midi_key_up "$_midi_key_value" && _media_key Pause
+        ;;
+      "$key_stop")
+        _is_midi_key_up "$_midi_key_value" && _media_key Stop
+        ;;
+      "$key_record")
+        _is_midi_key_up "$_midi_key_value" && _media_key Record
+        ;;
+      "$key_rewind")
+        _is_midi_key_up "$_midi_key_value" && _media_key_up Rewind
+        _is_midi_key_down "$_midi_key_value" && _media_key_down Rewind
+        ;;
+      "$key_forward")
+        _is_midi_key_up "$_midi_key_value" && _media_key_up Forward
+        _is_midi_key_down "$_midi_key_value" && _media_key_down Forward
+        ;;
+      "$key_previous")
+        _is_midi_key_up "$_midi_key_value" && _media_key Prev
+        ;;
+      "$key_next")
+        _is_midi_key_up "$_midi_key_value" && _media_key Next
+        ;;
+      "$key_volume_up")
+        _is_midi_key_up "$_midi_key_value" && _media_key RaiseVolume
+        ;;
+      "$key_volume_down")
+        _is_midi_key_up "$_midi_key_value" && _media_key LowerVolume
+        ;;
+      "$key_mute_0")
+        #_is_midi_key_up "$_midi_key_value" && _media_key Mute
+        _is_midi_key_up "$_midi_key_value" && _sndio_toggle_mute "output" "$_midi_key_value"
+        ;;
+      "$key_level_0")
+        _is_valid_midi_key_value "$_midi_key_value" && _sndio_set_level "output" "$_midi_key_value"
+        ;;
+      "$key_level_1")
+        _is_valid_midi_key_value "$_midi_key_value" && _sndio_set_level "app/shairpo0" "$_midi_key_value"
+        ;;
+      "$key_level_2")
+        _is_valid_midi_key_value "$_midi_key_value" && _sndio_set_level "app/ffplay0" "$_midi_key_value"
+        ;;
+      "$key_level_3")
+        _is_valid_midi_key_value "$_midi_key_value" && _sndio_set_level "app/mpv0" "$_midi_key_value"
+        ;;
+    esac
+  fi
+done
