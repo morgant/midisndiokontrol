@@ -13,7 +13,7 @@ A WIP (work in progress) utility that lets you control [sndio](https://sndio.org
 
 `midisndiokontrol` can currently handle MIDI key events from the Korg nanoKONTROL2 and trigger:
     * X11 key, keyup, or keydown events for various standard `XF86Audio*` media keys (via `xdotool`)
-    * Set, unset, or toggle mute for `sndio` devices (via `sndioctl)
+    * Set, unset, or toggle mute for `sndio` devices (via `sndioctl`)
     * Set a knob/slider value as the level for a `sndio` input, output, or application device (via `sndioctl`)
 
 The script is currently relatively straightforward to modify for your specific MIDI input device, `sndio` devices, and X11 applications. I suggest:
