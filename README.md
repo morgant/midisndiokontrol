@@ -11,7 +11,7 @@ A WIP (work in progress) utility that lets you control [sndio](https://sndio.org
 
 ### CURRENT
 
-`midisndiokontrol` can currently handle MIDI key events from the Korg nanoKONTROL2 and trigger:
+`midisndiokontrol` can currently handle MIDI CONTROL CHANGE "Expression" (CC11) messages from the Korg nanoKONTROL2 and trigger:
 
 * X11 key, keyup, or keydown events for various standard `XF86Audio*` media keys (via `xdotool`)
 * Set, unset, or toggle mute for `sndio` devices (via `sndioctl`)
@@ -28,13 +28,14 @@ The script is currently relatively straightforward to modify for your specific M
 
 ### PLANNED
 
+* For on/off MIDI keys, correctly support values of 0-63 as "off" and 64-127 as "on"
 * Make more configurable, especially the following for any MIDI key input:
     * MIDI key hex ID
     * Event type (i.e. "key", "down", "up", "value")
     * Action type (i.e. `xdotool`, `sndioctl`, etc.)
     * Action parameters (e.g. `key <name>`, `keydown <name>`, `keyup <name>` for `xdotool` or `<device>.level=<value>` or `<device>.mute=<value>` for `sndioctl`)
 * Create defaults for various devices
-* Monitor `sndioctl -m` output for device value state changes and send MIDI commands to control surface to illuminate buttons, as appropriate (e.g. on Korg nanoKONTROL2: change 'play' button to green when playing and orange when paused, change fast-forward/rewind buttons to orange/green while depressed, change 'mute' buttons for individual input/output devices to red when they are muted, etc.)
+* Monitor `sndioctl -m` output for device value state changes and send MIDI commands to control surface to illuminate buttons (MIDI CC80-83? Just a wild guess!), as appropriate (e.g. on Korg nanoKONTROL2: change 'play' button to green when playing and orange when paused, change fast-forward/rewind buttons to orange/green while depressed, change 'mute' buttons for individual input/output devices to red when they are muted, etc.)
 * Rewrite in C for increased performance
 
 ## PREREQUISITES
@@ -56,6 +57,11 @@ You might want to check out these similar projects for controlling OpenBSD's snd
 
 * [sndiokeys](https://github.com/ratchov/sndiokeys)
 * [xsndiomenu](https://github.com/morgant/xsndiomenu)
+
+## RESOURCES
+
+* [MIDI](https://en.wikipedia.org/w/index.php?title=MIDI)
+* [MIDI CC Lists & Explanations](https://nickfever.com/music/midi-cc-list)
 
 ## LICENSE
 

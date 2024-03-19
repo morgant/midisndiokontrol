@@ -83,6 +83,7 @@ _sndio_toggle_mute() {
 # NOTE: `midicat -d` only outputs hex to STDERR, so we're redirecting STDERR to STDOUT
 midicat -d -q "$midi_device" -o /dev/null 2>&1 | while IFS=' ' read -r _midi_command _midi_key _midi_key_value ; do
   #echo "command: ${_midi_command} key: ${_midi_key} value: ${_midi_key_value}"
+  # Handle MIDI CONTROL CHANGE "Expression" (CC11) messages
   if [ "$_midi_command" = "b0" ] ; then
     case $_midi_key in
       "$key_play")
