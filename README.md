@@ -28,7 +28,6 @@ The script is currently relatively straightforward to modify for your specific M
 
 ### PLANNED
 
-* For on/off MIDI keys, correctly support values of 0-63 as "off" and 64-127 as "on"
 * Make more configurable, especially the following for any MIDI key input:
     * MIDI key hex ID
     * Event type (i.e. "key", "down", "up", "value")

@@ -43,9 +43,10 @@ _midi_key_value_to_level_float() {
 }
 
 _midi_key_value_to_boolean() {
-  if _is_midi_key_down "$1" ; then
+  _decimal="$(_hex_to_dec "$1")"
+  if [ "$_decimal" -ge 64 -a "$_decimal" -le 127 ] ; then
     printf "1\n"
-  elif _is_midi_key_up "$1" ; then
+  elif [ "$_decimal" -ge 0 -a "$_decimal" -le 63 ] ; then
     printf "0\n"
   else
     printf "ERROR! MIDI key value '%s' cannot be determined to be true (on/down/pressed) or false (off/up/released)!\n" "$1" 1>&2
@@ -87,7 +88,7 @@ midicat -d -q "$midi_device" -o /dev/null 2>&1 | while IFS=' ' read -r _midi_com
   if [ "$_midi_command" = "b0" ] ; then
     case $_midi_key in
       "$key_play")
-        _is_midi_key_up "$_midi_key_value" && _media_key Play
+        _is_midi_key_up "$_midi_key_value" && _media_key Play && printf "\xc0\x29\x00" | midicat -i - -q "midi/0"
         ;; 
       "$key_pause")
         _is_midi_key_up "$_midi_key_value" && _media_key Pause
