@@ -28,13 +28,14 @@ The script is currently relatively straightforward to modify for your specific M
 
 ### PLANNED
 
+* Rewrite in Perl
 * Make more configurable, especially the following for any MIDI key input:
     * MIDI key hex ID
     * Event type (i.e. "key", "down", "up", "value")
     * Action type (i.e. `xdotool`, `sndioctl`, etc.)
     * Action parameters (e.g. `key <name>`, `keydown <name>`, `keyup <name>` for `xdotool` or `<device>.level=<value>` or `<device>.mute=<value>` for `sndioctl`)
 * Create defaults for various devices
-* Monitor `sndioctl -m` output for device value state changes and send MIDI commands to control surface to illuminate buttons (MIDI CC80-83? Just a wild guess!), as appropriate (e.g. on Korg nanoKONTROL2: change 'play' button to green when playing and orange when paused, change fast-forward/rewind buttons to orange/green while depressed, change 'mute' buttons for individual input/output devices to red when they are muted, etc.)
+* Monitor `sndioctl -m` output for device value state changes and send MIDI commands to control surface to illuminate buttons, as appropriate (e.g. on Korg nanoKONTROL2, when LEDs set to 'external': illuminate 'play' button when playing and maybe pulse/flash when paused, illuminate fast-forward/rewind buttons while depressed, illuminate 'mute' buttons for individual input/output devices when they are muted, etc.)
 * Rewrite in C for increased performance
 
 ## PREREQUISITES
