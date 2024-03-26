@@ -3,7 +3,7 @@ by Morgan Aldridge <morgant@makkintosshu.com>
 
 ## OVERVIEW
 
-A WIP (work in progress) utility that lets you control [sndio](https://sndio.org/) devices & state, plus X11 media applications, under [OpenBSD](https://www.openbsd.org/) using a MIDI control surface. It's currently being developed & tested with a Korg nanoKONTROL2 (hence 'kontrol' in the name), but I plan to make it much more generic and configurable. It is currently just a wrapper around OpenBSD's [midicat(1)](http://man.openbsd.org/midicat), [sndioctl(1)](http://man.openbsd.org/sndioctl), [xdotool(1)](https://github.com/jordansissel/xdotool), but I expect to rewrite it in C once I have stabilized the concept more, for performance reasons.
+A WIP (work in progress) utility that lets you control [sndio](https://sndio.org/) devices & state, plus X11 media applications, under [OpenBSD](https://www.openbsd.org/) using a MIDI control surface. It's currently being developed & tested with a [Korg nanoKONTROL2](https://www.korg.com/us/products/computergear/nanokontrol2/) (hence 'kontrol' in the name), but I plan to make it much more generic and configurable. It is currently just a wrapper around OpenBSD's [midicat(1)](http://man.openbsd.org/midicat), [sndioctl(1)](http://man.openbsd.org/sndioctl), [xdotool(1)](https://github.com/jordansissel/xdotool), but I expect to rewrite it in C once I have stabilized the concept more, for performance reasons.
 
 *IMPORTANT:* _I am not a regular user of MIDI devices, nor have I delved into the spec yet, so I'm likely using incorrect terminology at this point. Please feel free to suggest corrections/improvements."_
 
