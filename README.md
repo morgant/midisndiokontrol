@@ -34,12 +34,16 @@ The script is currently relatively straightforward to modify for your specific M
     * Event type (i.e. "key", "down", "up", "value")
     * Action type (i.e. `xdotool`, `sndioctl`, etc.)
     * Action parameters (e.g. `key <name>`, `keydown <name>`, `keyup <name>` for `xdotool` or `<device>.level=<value>` or `<device>.mute=<value>` for `sndioctl`)
-* Create defaults for various devices
+* Add support for panning audio in sndioctl(1) by calculating/adjusting the individual levels for stereo devices (e.g. `sndioctl -i <device>.level[0]=<value_left> <device>.level[1]=<value_right>`; with the device 'level' assumed to equal 'level[0] + level[1]' if 'level[0]' != 'level[1]')
 * Monitor `sndioctl -m` output for device value state changes and send MIDI commands to control surface to illuminate buttons, as appropriate (e.g. on Korg nanoKONTROL2, when LEDs set to 'external': illuminate 'play' button when playing and maybe pulse/flash when paused, illuminate fast-forward/rewind buttons while depressed, illuminate 'mute' buttons for individual input/output devices when they are muted, etc.)
+* Create defaults for various devices
 * Rewrite in C for increased performance
+* Port to other platforms which support sndio
 
 ## PREREQUISITES
 
+* [OpenBSD](https://www.openbsd.org/)
+* A MIDI device
 * [xdotool](https://github.com/jordansissel/xdotool)
 
 ## USAGE
